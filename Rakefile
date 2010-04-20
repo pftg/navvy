@@ -25,7 +25,7 @@ end
 require 'spec/rake/spectask'
 
 task :spec do
-  ['spec:active_record', 'spec:mongo_mapper', 'spec:sequel', 'spec:data_mapper'].each do |spec|
+  %w{spec:active_record spec:mongo_mapper spec:mongoid spec:sequel spec:data_mapper}.each do |spec|
     Rake::Task[spec].invoke
   end
 end
@@ -37,6 +37,10 @@ namespace :spec do
 
   Spec::Rake::SpecTask.new(:mongo_mapper) do |spec|
     spec.spec_files = FileList['spec/setup/mongo_mapper.rb', 'spec/*_spec.rb']
+  end
+  
+  Spec::Rake::SpecTask.new(:mongoid) do |spec|
+    spec.spec_files = FileList['spec/setup/mongoid.rb', 'spec/*_spec.rb']
   end
 
   Spec::Rake::SpecTask.new(:sequel) do |spec|

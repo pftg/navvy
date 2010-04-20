@@ -17,6 +17,7 @@ module Navvy
     key :started_at,    Time
     key :completed_at,  Time
     key :failed_at,     Time
+  end
 end
 
 require File.expand_path(File.dirname(__FILE__) + '/mongodb')
