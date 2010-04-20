@@ -23,6 +23,8 @@ module Navvy
       Navvy::Log.info '*** Starting ***'
       trap('TERM') { Navvy::Log.info '*** Exiting ***'; $exit = true }
       trap('INT')  { Navvy::Log.info '*** Exiting ***'; $exit = true }
+      Job.db.connection.connect_to_master if defined?(Mongoid)
+
 
       loop do
         fetch_and_run_jobs

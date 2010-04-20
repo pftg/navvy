@@ -19,33 +19,12 @@ module Navvy
 
       create(
         :object =>      object.to_s,
-        :method_name => method_name.to_sym,
+        :method_name => method_name,
         :arguments =>   args.to_yaml,
         :priority =>    options[:priority] || 0,
         :parent_id =>   options[:parent_id],
         :run_at =>      options[:run_at] || Time.now,
         :created_at =>  Time.now
-      )
-    end
-
-    ##
-    # Find the next available jobs in the queue. This will not include failed
-    # jobs (where :failed_at is not nil) and jobs that should run in the future
-    # (where :run_at is greater than the current time).
-    #
-    # @param [Integer] limit the limit of jobs to be fetched. Defaults to
-    # Navvy::Job.limit
-    #
-    # @return [array, nil] the next available jobs in an array or nil if no
-    # jobs were found.
-
-    def self.next(limit = self.limit)
-      all(
-        :failed_at =>     nil,
-        :completed_at =>  nil,
-        :run_at =>        {'$lte' => Time.now},
-        :order =>         'priority desc, created_at asc',
-        :limit =>         limit
       )
     end
 
@@ -111,20 +90,6 @@ module Navvy
       update_attributes(
         :failed_at => Time.now,
         :exception => message
-      )
-    end
-
-    ##
-    # Check how many times the job has failed. Will try to find jobs with a
-    # parent_id that's the same as self.id and count them
-    #
-    # @return [Integer] count the amount of times the job has failed
-
-    def times_failed
-      i = parent_id || id
-      self.class.count(
-        :failed_at => {'$ne' => nil},
-        '$where' => "this._id == '#{i}' || this.parent_id == '#{i}'"
       )
     end
   end
