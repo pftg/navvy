@@ -40,8 +40,6 @@ module Navvy
       )
     end
 
-
-
     ##
     # Check how many times the job has failed. Will try to find jobs with a
     # parent_id that's the same as self.id and count them
